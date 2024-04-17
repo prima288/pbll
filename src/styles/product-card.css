@@ -1,0 +1,55 @@
+.product__item {
+    border: 1px solid #9db4ce;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.product__img {
+    height: 200px;
+}
+
+.product__img:hover {
+    transform: scale(1.2);
+}
+
+.product__content h5 a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal; /* Mengubah white-space menjadi normal */
+    font-size: 0.9rem;
+}
+
+.product__content h5 {
+    margin-bottom: 10px;
+}
+
+.product__price {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #214969;
+}
+
+.addTOCart__btn {
+    border: none;
+    padding: 7px 25px;
+    background: #0b0a31;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+@media only screen and (max-width: 992px) {
+    .product__content h5 a {
+        font-size: 0.9rem;
+    }
+    .product__item {
+        padding: 20px;
+    }
+    .addTOCart__btn {
+        padding: 5px 15px;
+        font-size: 0.7rem;
+    }
+}
