@@ -1,272 +1,252 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
-    CButton,
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CTable,
-    CTableBody,
-    CTableDataCell,
-    CTableHead,
-    CTableHeaderCell,
-    CTableRow,
+  CButton,
+  CTable,
+  CTableBody,
+  CTableDataCell,
+  CTableHead,
+  CTableRow,
 } from '@coreui/react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button, Form } from "react-bootstrap";
 
-function AdminPage() {
-    // State untuk menyimpan data user, ID, email, password, nama, dan status modal
-    const [data_login, setDataLogin] = useState([]);
-    const [id, setId] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [nama, setNama] = useState("");
-    const [show, setShow] = useState(false);
 
-// menghapus data
+function AdminList() {
+  const [dataArtikel, setDataArtikel] = useState([]);
+  const [id, setId] = useState("");
+  const [judulArtikel, setJudulArtikel] = useState("");
+  const [deskripsiArtikel, setDeskripsiArtikel] = useState("");
+  const [gambarArtikel, setGambarArtikel] = useState("");
+  const [show, setShow] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-  const showModalDelete = (data) => {
-    setId(data.id);
-    setEmail(data.email);
-    setPassword(data.password);
-    setNama(data.nama);
-    setShowDelete(true);
-  }
-  const closeModalDelete = () => {
-    setId("");
-    setEmail("");
-    setPassword("");
-    setNama("");
-    setShowDelete(false);
-  }
-  const DeleteDataAdmin = async (event) => {
-    event.preventDefault();
+
+  // State untuk form tambah data
+  const [newJudulArtikel, setNewJudulArtikel] = useState("");
+  const [newDeskripsiArtikel, setNewDeskripsiArtikel] = useState("");
+  const [newGambarArtikel, setNewGambarArtikel] = useState("");
+
+  // State untuk form tambah data
+  
+
+
+  useEffect(() => {
+    getDataArtikel();
+  }, []);
+
+  const getDataArtikel = async () => {
     try {
-      const deleteData = await axios.delete(
-        `http://localhost:8080/delete/admin/${id}`);
-      alert(deleteData.data.messages)
-      window.location.reload();
+      const response = await axios.get('http://localhost:8080/artikel');
+      setDataArtikel(response.data.artikel);
     } catch (error) {
-      alert("Data Gagal dihapus")
+      console.error("Error fetching data:", error);
     }
   };
 
-    // Fungsi untuk mengambil data user dari API
-    const GetDataLogin = async () => {
-        try {
-            const getData = await axios.get('http://localhost:8080/admin');
-            setDataLogin(getData.data.data);
-            console.log(getData);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
+  const showModal = (data) => {
+    setId(data.id_produk);
+    setJudulArtikel(data.judul_artikel);
+    setDeskripsiArtikel(data.deskripsi_artikel);
+    setGambarArtikel(data.gambar_artikel);
+    setShow(true);
+  };
 
-    // Fungsi untuk mengirim permintaan update data user ke API
-    const UpdateDataAdmin = async (event) => {
-        event.preventDefault();
-        try {
-            const putData = await axios.put(
-                `http://localhost:8080/update/admin/${id}`,
-                {
-                    email: email,
-                    password: password,
-                    nama: nama
-                }
-            );
-            // Menampilkan pesan setelah berhasil atau gagal melakukan update
-            alert(putData.data.messages);
-            // Me-refresh halaman setelah update berhasil
-            window.location.reload();
-        } catch (error) {
-            // Menampilkan pesan kesalahan jika update gagal
-            alert("Data Gagal diubah");
-        }
-    };
+  const closeModal = () => {
+    setId("");
+    setJudulArtikel("");
+    setDeskripsiArtikel("");
+    setGambarArtikel("");
+    setShow(false);
+  };
 
-    // Fungsi untuk menampilkan modal edit data user
-    const showModal = (data) => {
-        // Mengisi state dengan data user yang akan di-edit
-        setId(data.id);
-        setEmail(data.email);
-        setPassword(data.password);
-        setNama(data.nama);
-        setShow(true);
+  const showAddModal = () => {
+    setJudulArtikel("");
+    setDeskripsiArtikel("");
+    setGambarArtikel("");
+    setShowAdd(true);
+  };
+
+
+  const closeAddModal = () => {
+    setJudulArtikel("");
+    setDeskripsiArtikel("");
+    setGambarArtikel("");
+    setShowAdd(false);
+  };
+
+  const addDataArtikel = async (event) => {
+    event.preventDefault();
+  
+    const formData = new FormData();
+    formData.append("judul_artikel", newJudulArtikel);
+    formData.append("deskripsi_artikel", newDeskripsiArtikel);
+    formData.append("gambar_artikel", newGambarArtikel);
+
+  
+    try {
+      const response = await axios.post('http://localhost:8080/api/artikel', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      console.log('Response:', response.data); // Tambahkan log untuk menampilkan respons
+  
+      if (response.data.status === 200) {
+        alert(response.data.messages.success);
+        getDataArtikel();
+        closeAddModal();
+      } else {
+        alert("Data Gagal Ditambahkan: " + response.data.messages.error);
+      }
+    } catch (error) {
+      console.error("Error adding data:", error);
+      alert("Data Gagal Ditambahkan. Lihat konsol untuk detail.");
     }
+  };
+  
+  
 
-    // Fungsi untuk menutup modal
-    const closeModal = () => {
-        // Mengosongkan state setelah modal ditutup
-        setId("");
-        setEmail("");
-        setPassword("");
-        setNama("");
-        setShow(false);
+  const showModalDelete = (data) => {
+    setId(data.id_artikel);
+    setShowDelete(true);
+  };
+
+  const closeModalDelete = () => {
+    setId("");
+    setShowDelete(false);
+  };
+
+  const deleteDataArtikel = async () => {
+    try {
+        const response = await axios.delete(`http://localhost:8080/delete/artikel/${id}`);
+        console.log(response); // Cetak seluruh objek respon ke konsol
+        alert(response.data.messages);
+        getDataArtikel();
+    } catch (error) {
+        console.error("Error deleting data:", error);
+        alert("Data Gagal Dihapus. Lihat konsol untuk detail.");
+    } finally {
+        closeModalDelete();
     }
+};
 
-    // Mengambil data user setelah komponen dipasang
-    useEffect(() => {
-        GetDataLogin();
-    }, []);
 
-    // Render tampilan komponen
-    return (
-        <div className='body-flex'>
-            <div className="flex">
-                <div className='col-10 p-5'>
-                    {/* Modal untuk update data user */}
-                    <Modal show={show} onHide={closeModal}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Form Update Data</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            {/* Form untuk mengisi data user yang akan di-update */}
-                            <Form onSubmit={UpdateDataAdmin}>
-                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        autoFocusu
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        value={email}
-                                    />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                    <Form.Label>Password</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        autoFocus
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        value={password}
-                                    />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                    <Form.Label>Nama</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        autoFocus
-                                        onChange={(e) => setNama(e.target.value)}
-                                        value={nama}
-                                    />
-                                </Form.Group>
-                                {/* Tombol untuk mengirim data update */}
-                                <Button type='submit' color="primary" className="px-4">
-                                    Update
-                                </Button>
-                            </Form>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            {/* Tombol untuk menutup modal */}
-                            <Button variant="secondary" onClick={closeModal}>
-                                Close
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
 
-                    {/* Modal DELETE */}
-          <Modal show={showDelete} onHide={closeModalDelete}>
-            <Modal.Header closeButton>
-              <Modal.Title>Apakah Anda yakin menghapus data ini?</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="col-sm-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title">Detail Data</h5>
-                    <div className="row">
-                      <p className="col-4 card-text">
-                        Email
-                      </p>
-                      <p className="col-6 card-text">
-                        : {email}
-                      </p>
-                    </div>
-                    <div className="row">
-                      <p className="col-4 card-text">
-                        Password
-                      </p>
-                      <p className="col-6 card-text">
-                        : {password}
-                      </p>
-                    </div>
-                    <div className="row">
-                      <p className="col-4 card-text">
-                        Nama
-                      </p>
-                      <p className="col-6 card-text">
-                        : {nama}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button type='submit' color="primary" className="px-4"
-                onClick={DeleteDataAdmin}>
-                Hapus Data
-              </Button>
-              <Button variant="danger" onClick={closeModalDelete}>
-                Batal
-              </Button>
-            </Modal.Footer>
-          </Modal>
-
-                    {/* Tampilan data user dalam tabel */}
-                    <h1 className="py-1">
-                        Data Admin
-                    </h1>
-                    <CCard className="mb-4">
-                        <CCardHeader>
-                            <strong>Tabel Admin</strong>
-                        </CCardHeader>
-                        <CCardBody>
-                            <p className="text-medium-emphasis small">
-                                Tabel ini menampilkan seluruh data admin yang aktif
-                            </p>
-                            {/* Tabel untuk menampilkan data user */}
-                            <CTable striped>
-                                <CTableHead>
-                                    <CTableRow>
-                                        <CTableHeaderCell scope="col">Email</CTableHeaderCell>
-                                        <CTableHeaderCell scope="col">Password</CTableHeaderCell>
-                                        <CTableHeaderCell scope="col">Nama</CTableHeaderCell>
-                                        <CTableHeaderCell scope="col">Action</CTableHeaderCell>
-                                    </CTableRow>
-                                </CTableHead>
-                                <CTableBody>
-                                    {/* Mapping data user untuk ditampilkan dalam tabel */}
-                                    {data_login.map((item, index) => {
-                                        return (
-                                            <CTableRow key={index}>
-                                                <CTableDataCell>{item.email}</CTableDataCell>
-                                                <CTableDataCell>{item.password}</CTableDataCell>
-                                                <CTableDataCell>{item.nama}</CTableDataCell>
-                                                {/* Tombol untuk mengedit dan menghapus data user */}
-                                                <CTableDataCell>
-                                                    <CButton
-                                                        className='btn btn-primary text-white me-2'
-                                                        onClick={() => showModal(item)}
-                                                    >
-                                                        Edit
-                                                    </CButton>
-                                                    <CButton className='btn btn-danger text-white'
-                                                     onClick={() => showModalDelete(item)}>
-                                                        Hapus
-                                                    </CButton>
-                                                </CTableDataCell>
-                                            </CTableRow>
-                                        )
-                                    })}
-                                </CTableBody>
-                            </CTable>
-                        </CCardBody>
-                    </CCard>
-                </div>
-            </div>
+  return (
+    
+    <div className='body-flex'>
+      <div className="flex">
+        <div className='col-10 p-5'>
+          {/* Tombol Tambah */}
+          <div className="text-center mb-3">
+            <CButton color="primary" onClick={showAddModal}>
+              Tambah Data Artikel
+            </CButton>
+          </div>
+          <CTable striped>
+            
+            <CTableHead>
+              <CTableRow>
+                <CTableDataCell>Judul</CTableDataCell>
+                <CTableDataCell>Deskripsi Artikel</CTableDataCell>
+                <CTableDataCell>Gambar Artikel</CTableDataCell>
+              </CTableRow>
+            </CTableHead>
+            <CTableBody>
+              {dataArtikel.map((item, index) => (
+                <CTableRow key={index}>
+                  <CTableDataCell>{item.judul_artikel}</CTableDataCell>
+                  <CTableDataCell>{item.deskripsi_artikel}</CTableDataCell>
+                  <CTableDataCell>
+                    <img
+                      src={`http://localhost:8080/gambar/${item.gambar_artikel}`}
+                      alt={item.judul_artikel}
+                      style={{ maxWidth: '100px', maxHeight: '100px' }}
+                    />
+                  </CTableDataCell>
+                  <CTableDataCell>
+                    {/* <CButton
+                      className='btn btn-primary text-white me-2'
+                      onClick={() => showModal(item)}
+                    >
+                      Edit
+                    </CButton> */}
+                    <CButton
+                      className='btn btn-danger text-white'
+                      onClick={() => showModalDelete(item)}
+                    >
+                      Hapus
+                    </CButton>
+                  </CTableDataCell>
+                </CTableRow>
+              ))}
+              <CTableRow>
+                <CTableDataCell colSpan="5" className="text-center">
+                 
+                </CTableDataCell>
+              </CTableRow>
+            </CTableBody>
+          </CTable>
         </div>
-    );
+      </div>
+
+      <Modal show={showAdd} onHide={closeAddModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Form Tambah Data Artikel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={addDataArtikel}>
+            <Form.Group className="mb-3" controlId="formJudulArtikel">
+              <Form.Label>Judul Artikel</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setNewJudulArtikel(e.target.value)}
+                value={newJudulArtikel}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formDeskripsiArtikel">
+              <Form.Label>Deskripsi Artikel</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                onChange={(e) => setNewDeskripsiArtikel(e.target.value)}
+                value={newDeskripsiArtikel}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formGambarArtikel">
+              <Form.Label>Gambar Artikel</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(e) => setNewGambarArtikel(e.target.files[0])}
+              />
+            </Form.Group>
+            <Button type='submit' color="primary" className="px-4">
+              Tambahkan
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={showDelete} onHide={closeModalDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>Konfirmasi Penghapusan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Apakah Anda yakin ingin menghapus data ini?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={deleteDataArtikel}>
+            Hapus
+          </Button>
+          <Button variant="secondary" onClick={closeModalDelete}>
+            Batal
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
 }
 
-export default AdminPage;
+export default AdminList;

@@ -19,6 +19,8 @@ function ProdukPage() {
   const [deskripsiProduk, setDeskripsiProduk] = useState("");
   const [hargaProduk, setHargaProduk] = useState("");
   const [gambarProduk, setGambarProduk] = useState("");
+  const [BeratProduk, setBeratProduk] = useState("");
+  const [StokProduk, setStokProduk] = useState("");
   const [show, setShow] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -28,9 +30,11 @@ function ProdukPage() {
   const [newDeskripsiProduk, setNewDeskripsiProduk] = useState("");
   const [newHargaProduk, setNewHargaProduk] = useState("");
   const [newGambarProduk, setNewGambarProduk] = useState("");
+  const [newBeratProduk, setNewBeratProduk] = useState("");
+  const [newStokProduk, setNewStokProduk] = useState("");
 
   // State untuk form tambah data
-  const [newCategory, setNewCategory] = useState("Grade A"); // Default category
+  
 
 
   useEffect(() => {
@@ -52,6 +56,8 @@ function ProdukPage() {
     setDeskripsiProduk(data.deskripsi_produk);
     setHargaProduk(data.harga_produk);
     setGambarProduk(data.gambar_produk);
+    setBeratProduk(data.berat_produk);
+    setStokProduk(data.stok_produk);
     setShow(true);
   };
 
@@ -61,6 +67,8 @@ function ProdukPage() {
     setDeskripsiProduk("");
     setHargaProduk("");
     setGambarProduk("");
+    setBeratProduk("");
+    setStokProduk("");
     setShow(false);
   };
 
@@ -69,6 +77,8 @@ function ProdukPage() {
     setNewDeskripsiProduk("");
     setNewHargaProduk("");
     setNewGambarProduk("");
+    setBeratProduk("");
+    setStokProduk("");
     setShowAdd(true);
   };
 
@@ -78,6 +88,8 @@ function ProdukPage() {
     setNewDeskripsiProduk("");
     setNewHargaProduk("");
     setNewGambarProduk("");
+    setBeratProduk("");
+    setStokProduk("");
     setShowAdd(false);
   };
 
@@ -89,7 +101,8 @@ function ProdukPage() {
     formData.append("deskripsi_produk", newDeskripsiProduk);
     formData.append("harga_produk", newHargaProduk);
     formData.append("gambar_produk", newGambarProduk);
-    formData.append("category", newCategory);
+    formData.append("berat_produk", newBeratProduk);
+    formData.append("stok_produk", newStokProduk);
   
     try {
       const response = await axios.post('http://localhost:8080/api/produk', formData, {
@@ -160,7 +173,8 @@ function ProdukPage() {
                 <CTableDataCell>Deskripsi Produk</CTableDataCell>
                 <CTableDataCell>Harga Produk</CTableDataCell>
                 <CTableDataCell>Gambar Produk</CTableDataCell>
-                <CTableDataCell>Kategori</CTableDataCell>
+                <CTableDataCell>Berat</CTableDataCell>
+                <CTableDataCell>Stok</CTableDataCell>
                 <CTableDataCell>Action</CTableDataCell>
               </CTableRow>
             </CTableHead>
@@ -177,7 +191,8 @@ function ProdukPage() {
                       style={{ maxWidth: '100px', maxHeight: '100px' }}
                     />
                   </CTableDataCell>
-                  <CTableDataCell>{item.category}</CTableDataCell>
+                  <CTableDataCell>{item.berat_produk}</CTableDataCell>
+                  <CTableDataCell>{item.stok_produk}</CTableDataCell>
                   <CTableDataCell>
                     {/* <CButton
                       className='btn btn-primary text-white me-2'
@@ -242,37 +257,21 @@ function ProdukPage() {
                 onChange={(e) => setNewGambarProduk(e.target.files[0])}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formCategory">
-              <Form.Label>Kategori</Form.Label>
-              <div>
-                <Form.Check
-                  inline
-                  type="radio"
-                  label="Grade A"
-                  name="category"
-                  value="Grade A"
-                  checked={newCategory === "Grade A"}
-                  onChange={() => setNewCategory("Grade A")}
-                />
-                <Form.Check
-                  inline
-                  type="radio"
-                  label="Grade B"
-                  name="category"
-                  value="Smoothies"
-                  checked={newCategory === "Grade B"}
-                  onChange={() => setNewCategory("Grade B")}
-                />
-                <Form.Check
-                  inline
-                  type="radio"
-                  label="Grade C"
-                  name="category"
-                  value="Grade C"
-                  checked={newCategory === "Grade C"}
-                  onChange={() => setNewCategory("Grade C")}
-                />
-              </div>
+            <Form.Group className="mb-3" controlId="formBeratProduk">
+              <Form.Label>Berat Produk</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setNewBeratProduk(e.target.value)}
+                value={newBeratProduk}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formStokProduk">
+              <Form.Label>Stok Produk</Form.Label>
+              <Form.Control
+                type="text"
+                onChange={(e) => setNewStokProduk(e.target.value)}
+                value={newStokProduk}
+              />
             </Form.Group>
             <Button type='submit' color="primary" className="px-4">
               Tambahkan
