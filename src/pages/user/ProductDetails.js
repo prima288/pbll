@@ -4,13 +4,13 @@ import axios from 'axios';
 import Helmet from '../../components/Helmet/Helmet';
 import CommonSection from '../../components/UI/CommonSection';
 import { Container, Row, Col } from 'reactstrap';
-
 import { useDispatch } from 'react-redux';
 import { cartActions } from '../../shop/shop-cart/cartSlice';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import '../../styles/product-details.css';
 
-const FoodDetails = () => {
+const ProductDetails = () => {
   const [tab, setTab] = useState('desc');
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -20,14 +20,12 @@ const FoodDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-          const response = await axios.get(`http://localhost:8080/produk/${id}`);
-          setProduct(response.data);
+        const response = await axios.get(`http://localhost:8080/produk/${id}`);
+        setProduct(response.data);
       } catch (error) {
-          console.error('Error fetching product details:', error);
+        console.error('Error fetching product details:', error);
       }
-  };
-  
-
+    };
     fetchProduct();
   }, [id]);
 
@@ -41,16 +39,15 @@ const FoodDetails = () => {
       title: product?.nama_produk,
       price: product?.harga_produk,
       image01: product?.gambar_produk,
-      quantity : 1,
+      quantity: 1,
     }));
   };
 
   if (!product) {
-    // Menampilkan status loading atau menangani kesalahan
     return <div>Loading...</div>;
   }
 
-  const { nama_produk, harga_produk, category, deskripsi_produk } = product;
+  const { nama_produk, harga_produk, deskripsi_produk, stok_produk, berat_produk } = product;
 
   return (
     <Helmet title='Product-details'>
@@ -58,39 +55,43 @@ const FoodDetails = () => {
       <section>
         <Container>
           <Row>
-            <Col lg='2' md='2'>
-              <div className='product__images'>
-                <div className='img__item mb-3' onClick={() => setPreviewImg(product.gambar_produk)}>
-                  <img src={`http://localhost:8080/gambar/${product.gambar_produk}`} alt={product.nama_produk} className='w-100' />
-                </div>
-                {/* Tambahkan gambar-gambar tambahan jika ada */}
-              </div>
-            </Col>
-
-
-            <Col lg='4' md='4'>
+            <Col lg='6'>
               <div className='product__main-img'>
-                <img src={previewImg} alt='' className='w-100' />
+                <img 
+                  src={previewImg || `http://localhost:8080/gambar/${product.gambar_produk}`} 
+                  alt='' 
+                  className='img-fluid' 
+                  style={{ maxWidth: '100%', maxHeight: '400px' }}
+                />
               </div>
             </Col>
 
-            <Col lg='6' md='6'>
+            <Col lg='6'>
               <div className='single__product-content'>
-                <h2 className='product__title'>{nama_produk}</h2>
-                <span className='product__price'>{harga_produk}</span>
-                <p className='category mb-5'>Category: <span>{category}</span></p>
+                <h2 className='product__title' style={{ fontSize: '2rem', marginBottom: '15px' }}>{nama_produk}</h2>
+                <p className='mb-3' style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'blue' }}>Rp. {harga_produk}</p>
 
-                <button onClick={addItemToCart} className='addTOCart__btn'>Add to Cart</button>
-              </div>
-            </Col>
+                <table className='table table-bordered'>
+                  <tbody>
+                    <tr>
+                      <td>Detail Produk</td>
+                      <td>{deskripsi_produk}</td>
+                    </tr>
+                    <tr>
+                      <td>Stok</td>
+                      <td>{stok_produk}</td>
+                    </tr>
+                    <tr>
+                      <td>Berat</td>
+                      <td>{berat_produk} kg</td>
+                    </tr>
+                  </tbody>
+                </table>
 
-            <Col lg='12'>
-              <div className='tabs d-flex align-items-center gap-3 py-2'>
-                <h6 className='tab__active'>Description</h6>
-              </div>
-
-              <div className='tab__content'>
-                <p>{deskripsi_produk}</p>
+                <button onClick={addItemToCart} className='btn btn-primary mr-2'>
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                </button>
+                <button className='btn btn-success'>Beli Sekarang</button>
               </div>
             </Col>
           </Row>
@@ -100,4 +101,4 @@ const FoodDetails = () => {
   );
 };
 
-export default FoodDetails;
+export default ProductDetails;

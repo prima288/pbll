@@ -17,9 +17,9 @@ const Footer = () => {
                             </div>
                         </div>
                         <p className="footer__text mt-4">
-                                blablabalbalbalbalbalbalbwdbjsdbahevfhevcb
-                                csdchvedcwecfw
-                                ecfwjhevfwefoi
+                        Tempatnya beras sehat berkualitas untuk keluarga Anda! Kami bangga 
+                        menyajikan beras pilihan yang kaya akan nutrisi, bebas dari bahan kimia berbahaya, 
+                        dan diolah dengan standar tertinggi untuk memastikan kelezatan dan kualitasnya.
                             </p>
                 </Col>
                 

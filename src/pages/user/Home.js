@@ -52,7 +52,7 @@ const Home = ( ) => {
             <Container>
                 <Row>
                     <Col lg='12' className="text-center">
-                        <h2 className="section__title">Tentang Beras Sehat</h2>
+                        <h2 className="section__title">Mengenal Beras Sehat</h2>
                     </Col>
                     <ArtikelList/>
                 </Row>

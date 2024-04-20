@@ -7,6 +7,7 @@ import ProductDetails from '../pages/user/ProductDetails';
 import Checkout from '../pages/user/Checkout';
 import Login from '../pages/user/Login';
 import Signup from '../pages/user/Signup';
+import ArtikelDetails from '../pages/user/ArtikelDetails';
 import AdminHome from '../pages/admin/Component/Home/Home';
 import AdminOrders from '../pages/admin/Component/Orders/Orders';
 import AdminAddNew from '../pages/admin/Pages/AddNew/AddNew';
@@ -45,7 +46,8 @@ const Routers = () => {
             <Route path='/checkout' element={<Checkout/>}/>
             <Route path='/login' element={<Login/>}/>
             <Route path='/signup' element={<Signup/>}/>
-            <Route path='/detail' element={<ProductDetails/>}/>
+            <Route path='/detail/:id' element={<ProductDetails/>}/>
+            <Route path='/detailartikel/:id' element={<ArtikelDetails/>} />
             <Route path="/" element={<Navigate to="/admin" />} />
       <Route path="/admin" element={<AdminHome />} />
       <Route path="/admin/orders" element={<AdminOrders />} />

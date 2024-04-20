@@ -27,8 +27,12 @@ function AdminList() {
   const [newDeskripsiArtikel, setNewDeskripsiArtikel] = useState("");
   const [newGambarArtikel, setNewGambarArtikel] = useState("");
 
-  // State untuk form tambah data
-  
+
+  // State untuk form edit data
+const [editJudulArtikel, setEditJudulArtikel] = useState("");
+const [editDeskripsiArtikel, setEditDeskripsiArtikel] = useState("");
+const [editGambarArtikel, setEditGambarArtikel] = useState("");
+
 
 
   useEffect(() => {
@@ -45,12 +49,13 @@ function AdminList() {
   };
 
   const showModal = (data) => {
-    setId(data.id_produk);
-    setJudulArtikel(data.judul_artikel);
-    setDeskripsiArtikel(data.deskripsi_artikel);
-    setGambarArtikel(data.gambar_artikel);
+    setId(data.id_artikel);
+    setEditJudulArtikel(data.judul_artikel); // Menggunakan setEditJudulArtikel
+    setEditDeskripsiArtikel(data.deskripsi_artikel); // Menggunakan setEditDeskripsiArtikel
+    setEditGambarArtikel(data.gambar_artikel); // Menggunakan setEditGambarArtikel
     setShow(true);
   };
+  
 
   const closeModal = () => {
     setId("");
@@ -106,6 +111,35 @@ function AdminList() {
     }
   };
   
+  const updateDataArtikel = async (event) => {
+    event.preventDefault();
+    
+    const formData = new FormData();
+    formData.append("judul_artikel", editJudulArtikel);
+    formData.append("deskripsi_artikel", editDeskripsiArtikel);
+    formData.append("gambar_artikel", editGambarArtikel);
+  
+    try {
+      const response = await axios.put(`http://localhost:8080/update/artikel/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    
+      console.log('Response:', response.data);
+    
+      if (response.data.status === 200) {
+        alert(response.data.messages.success);
+        getDataArtikel();
+        closeModal();
+      } else {
+        alert("Data Gagal Diupdate: " + response.data.messages.error);
+      }
+    } catch (error) {
+      console.error("Error updating data:", error);
+      alert("Data Gagal Diupdate. Lihat konsol untuk detail.");
+    }
+  };
   
 
   const showModalDelete = (data) => {
@@ -152,27 +186,28 @@ function AdminList() {
                 <CTableDataCell>Judul</CTableDataCell>
                 <CTableDataCell>Deskripsi Artikel</CTableDataCell>
                 <CTableDataCell>Gambar Artikel</CTableDataCell>
+                <CTableDataCell>Action</CTableDataCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
               {dataArtikel.map((item, index) => (
                 <CTableRow key={index}>
-                  <CTableDataCell>{item.judul_artikel}</CTableDataCell>
-                  <CTableDataCell>{item.deskripsi_artikel}</CTableDataCell>
-                  <CTableDataCell>
+                <CTableDataCell>{item.judul_artikel}</CTableDataCell>
+                <CTableDataCell>{item.deskripsi_artikel}</CTableDataCell>
+                <CTableDataCell>
                     <img
                       src={`http://localhost:8080/gambar/${item.gambar_artikel}`}
-                      alt={item.judul_artikel}
-                      style={{ maxWidth: '100px', maxHeight: '100px' }}
+                      alt={item.gambar_artikel || "Gambar Artikel"}
+                      style={{ maxWidth: '1000px', maxHeight: '1000px' }}
                     />
-                  </CTableDataCell>
+                    </CTableDataCell>
                   <CTableDataCell>
-                    {/* <CButton
+                     <CButton
                       className='btn btn-primary text-white me-2'
                       onClick={() => showModal(item)}
                     >
                       Edit
-                    </CButton> */}
+                    </CButton> 
                     <CButton
                       className='btn btn-danger text-white'
                       onClick={() => showModalDelete(item)}
@@ -228,6 +263,44 @@ function AdminList() {
           </Form>
         </Modal.Body>
       </Modal>
+
+      <Modal show={show} onHide={closeModal}>
+  <Modal.Header closeButton>
+    <Modal.Title>Form Edit Data Artikel</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form onSubmit={updateDataArtikel}>
+      <Form.Group className="mb-3" controlId="formEditJudulArtikel">
+        <Form.Label>Judul Artikel</Form.Label>
+        <Form.Control
+          type="text"
+          onChange={(e) => setEditJudulArtikel(e.target.value)}
+          value={editJudulArtikel}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formEditDeskripsiArtikel">
+        <Form.Label>Deskripsi Artikel</Form.Label>
+        <Form.Control
+          as="textarea"
+          rows={3}
+          onChange={(e) => setEditDeskripsiArtikel(e.target.value)}
+          value={editDeskripsiArtikel}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formEditGambarArtikel">
+        <Form.Label>Gambar Artikel</Form.Label>
+        <Form.Control
+          type="file"
+          onChange={(e) => setEditGambarArtikel(e.target.files[0])}
+        />
+      </Form.Group>
+      <Button type='submit' color="primary" className="px-4">
+        Update
+      </Button>
+    </Form>
+  </Modal.Body>
+</Modal>
+
 
       <Modal show={showDelete} onHide={closeModalDelete}>
         <Modal.Header closeButton>

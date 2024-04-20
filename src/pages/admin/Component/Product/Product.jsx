@@ -194,12 +194,12 @@ function ProdukPage() {
                   <CTableDataCell>{item.berat_produk}</CTableDataCell>
                   <CTableDataCell>{item.stok_produk}</CTableDataCell>
                   <CTableDataCell>
-                    {/* <CButton
+                     <CButton
                       className='btn btn-primary text-white me-2'
                       onClick={() => showModal(item)}
                     >
                       Edit
-                    </CButton> */}
+                    </CButton> 
                     <CButton
                       className='btn btn-danger text-white'
                       onClick={() => showModalDelete(item)}
