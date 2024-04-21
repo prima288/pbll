@@ -12,25 +12,28 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+  
     try {
       const email = loginNameRef.current.value;
       const password = loginPasswordRef.current.value;
-
+  
       const response = await axios.post('http://localhost:8080/login', { email, password });
 
-      if (response.data.status === 'success') {
-        // Simpan data session di localStorage
+  
+      if (response.data && response.data.token) {
+        // Simpan token ke localStorage
+        localStorage.setItem('token', response.data.token);
+        // Simpan data pengguna ke localStorage (jika diperlukan)
         localStorage.setItem('user_id', response.data.user_id);
         localStorage.setItem('user_name', response.data.user_name);
         localStorage.setItem('user_email', response.data.user_email);
-
+  
         console.log('Login Successfull', response.data);
         
-        // Show success alert
+        // Tampilkan alert berhasil
         window.alert('Welcome!');
     
-        // Redirect after successful registration
+        // Redirect ke halaman home atau dashboard
         navigate("/home");
       } else {
         setErrorMessage('Login failed. Email or password is incorrect.');
@@ -40,6 +43,7 @@ const Login = () => {
       setErrorMessage('An error occurred during login. Please try again.');
     }
   };
+  
 
   // Implement logout function
   const logout = () => {

@@ -5,7 +5,6 @@ import CommonSection from '../../components/UI/CommonSection'; // Sesuaikan jalu
 import Helmet from '../../components/Helmet/Helmet'; // Sesuaikan jalur impor
 import '../../styles/checkout.css';
 import axios from 'axios';
-
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 

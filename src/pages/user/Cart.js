@@ -1,71 +1,53 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Container, Row, Col, Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import { cartActions } from '../../shop/shop-cart/cartSlice';
+import React from "react";
+
+import { ListGroup } from "reactstrap";
+import { Link } from "react-router-dom";
+import CartItem from "../../components/UI/cart/CartItem";
+
+import { useDispatch, useSelector } from "react-redux";
+import { cartUiActions } from "../../shop/shop-cart/cartUiSlice";
+
+import "../../styles/shopping-cart.css";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  const cartProducts = useSelector((state) => state.cart.cartItems);
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
 
-  const handleIncrement = (id) => {
-    dispatch(cartActions.incrementItem(id));
+  const toggleCart = () => {
+    dispatch(cartUiActions.toggle());
   };
-
-  const handleDecrement = (id) => {
-    // Ambil item yang sesuai dengan id
-    const selectedItem = cartItems.find(item => item.id === id);
-    // Cek apakah jumlah barang lebih besar dari 1 sebelum dikurangi
-    if (selectedItem.quantity > 1) {
-      dispatch(cartActions.decrementItem(id));
-    } else {
-      // Jika jumlah barang sudah 1, maka hapus item dari keranjang
-      dispatch(cartActions.removeItem(id));
-    }
-  };
-
-  const handleRemove = (id) => {
-    dispatch(cartActions.removeItem(id));
-  };
-
   return (
-    <Container>
-      <h1>Shopping Cart</h1>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty</p>
-      ) : (
-        <>
-          {cartItems.map((item) => (
-            <Row key={item.id} className="mb-3">
-              <Col sm="2">
-                <img src={item.image} alt={item.title} className="img-fluid" />
-              </Col>
-              <Col sm="3">
-                <p>{item.title}</p>
-              </Col>
-              <Col sm="2">
-                <p>Harga: Rp.{item.price}</p>
-              </Col>
-              <Col sm="2">
-                <p>Jumlah Barang: {item.quantity}</p>
-              </Col>
-              <Col sm="3">
-                <Button color="info" onClick={() => handleIncrement(item.id)}>+</Button>{' '}
-                <Button color="danger" onClick={() => handleDecrement(item.id)}>-</Button>{' '}
-                <Button color="danger" onClick={() => handleRemove(item.id)}>Remove</Button>
-              </Col>
-            </Row>
-          ))}
-          <Row>
-            <Col sm="12">
-              <Link to="/checkout">
-                <Button color="primary">Checkout</Button>
-              </Link>
-            </Col>
-          </Row>
-        </>
-      )}
-    </Container>
+    <div className="cart__container">
+      <ListGroup className="cart">
+        <div className="cart__close">
+          <span onClick={toggleCart}>
+            <i class="ri-close-fill"></i>
+          </span>
+        </div>
+
+        <div className="cart__item-list">
+          {cartProducts.length === 0 ? (
+            <h6 className="text-center mt-5">No item added to the cart</h6>
+          ) : (
+            cartProducts.map((item, index) => (
+              <CartItem item={item} key={index} />
+            ))
+          )}
+        </div>
+
+        <div className="cart__bottom d-flex align-items-center justify-content-between">
+          <h6>
+            Subtotal : <span>Rp.{totalAmount}</span>
+          </h6>
+          <button>
+            <Link to="/checkout" onClick={toggleCart}>
+              Checkout
+            </Link>
+          </button>
+        </div>
+      </ListGroup>
+    </div>
   );
 };
 

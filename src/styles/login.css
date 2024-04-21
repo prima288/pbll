@@ -1,27 +1,108 @@
-.gradient-custom-2 {
-    background: #FF7F3F;
-    padding: 15px 30px; /* Sesuaikan padding sesuai kebutuhan */
-    color: white;
-    transition: background-color 0.3s ease; /* Tambahkan efek transisi pada warna latar belakang */
+.SignUp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* mengatasi overflow */
+}
+
+.konten {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.konten-signup {
+  background-color: #ffffff; /* ubah warna background */
+  padding: 40px; /* tambahkan padding */
+  border-radius: 10px; /* tambahkan border radius */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* tambahkan bayangan */
+}
+
+.div {
+  width: 100%; /* lebar penuh */
+  max-width: 600px; /* lebar maksimum */
+}
+
+.overlap-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px; /* tambahkan margin bawah */
+}
+
+
+
+.input-container {
+  margin-bottom: 20px; /* tambahkan margin bawah */
+}
+
+.box, .box-pass {
+  background-color: #f0f0f0; /* ubah warna background */
+  border-radius: 10px; /* tambahkan border radius */
+  border: 1px solid #000000; /* tambahkan border */
+  padding: 15px 20px; /* tambahkan padding */
+  width: 100%; /* lebar penuh */
+  max-width: 550px; /* lebar maksimum */
+  font-size: 16px; /* kurangi ukuran font */
+}
+
+.text-wrapper {
+  margin-bottom: 10px; /* tambahkan margin bawah */
+  text-align: center; /* perbaiki posisi teks */
+}
+
+.icon-eye-login {
+  right: 15px; /* sedikit ubah posisi */
+}
+
+.button-sing-up {
+  background-color: #000080;
+  border-radius: 30px; /* tambahkan border radius */
+  padding: 15px 20px; /* tambahkan padding */
+  width: 100%; /* lebar penuh */
+  max-width: 340px; /* lebar maksimum */
+  font-size: 16px; /* kurangi ukuran font */
+}
+
+.frame {
+  margin-top: 30px; /* tambahkan margin atas */
+  text-align: center; /* perbaiki posisi teks */
+}
+
+@media (max-width: 767px) {
+  .SignUp {
+    padding: 20px; /* tambahkan padding */
   }
-  
-  .gradient-custom-2:hover {
-    background: #FF6F2F; /* Atur warna latar belakang hover sesuai kebutuhan */
+
+  .konten-signup {
+    padding: 30px; /* tambahkan padding */
   }
-  
-  @media (min-width: 768px) {
-    .gradient-form {
-      height: 100vh !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+
+  .box, .box-pass {
+    max-width: 500px; /* kurangi lebar maksimum */
   }
-    
-  @media (min-width: 769px) {
-    .gradient-custom-2 {
-      border-top-right-radius: .3rem;
-      border-bottom-right-radius: .3rem;
-    }
+}
+
+@media (max-width: 480px) {
+  .SignUp {
+    padding: 15px; /* tambahkan padding */
   }
-  
+
+  .konten-signup {
+    padding: 20px; /* tambahkan padding */
+  }
+
+  .box, .box-pass {
+    max-width: 200px; /* kurangi lebar maksimum */
+  }
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif; /* Gunakan 'Roboto' jika tersedia, jika tidak gunakan 'Arial' */
+}

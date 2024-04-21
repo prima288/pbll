@@ -1,5 +1,5 @@
 .checkout__bill, .checkout__total {
-  background: navy; /* Menyesuaikan warna background */
+  background: #000080; /* Menyesuaikan warna background */
   color: white; /* Menyesuaikan warna teks agar kontras */
 }
 
