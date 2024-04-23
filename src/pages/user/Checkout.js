@@ -1,29 +1,27 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
-import CommonSection from '../../components/UI/CommonSection'; // Sesuaikan jalur impor
-import Helmet from '../../components/Helmet/Helmet'; // Sesuaikan jalur impor
-import '../../styles/checkout.css';
+import CommonSection from '../../components/UI/CommonSection';
+import Helmet from '../../components/Helmet/Helmet';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import '../../styles/checkout.css';
 
 const Checkout = () => {
   const [enterName, setEnterName] = useState('');
   const [enterNumber, setEnterNumber] = useState('');
   const [enterAddress, setEnterAddress] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('cash');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
   const shippingCost = 0;
-
   const totalAmount = cartTotalAmount + Number(shippingCost);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // Ambil item dari keranjang belanja
     const itemsInCart = cartItems.map((item) => ({
       id: item.id,
       title: item.title,
@@ -31,7 +29,6 @@ const Checkout = () => {
       price: item.price,
     }));
 
-    // Hitung totalAmount
     const calculatedTotalAmount = cartTotalAmount + shippingCost;
 
     try {
@@ -47,38 +44,10 @@ const Checkout = () => {
       console.log('Respon API:', response.data);
 
       if (response.data.status === 201) {
-        // Tampilkan SweetAlert setelah pembayaran berhasil
-        Swal.fire({
-          title: 'Pembayaran Berhasil',
-          text: response.data.messages?.success || 'Pembayaran berhasil tanpa pesan sukses tambahan',
-          icon: 'success',
-          showCancelButton: true,
-          confirmButtonText: 'Order',
-          cancelButtonText: 'Back',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Arahkan pengguna ke halaman Order atau lakukan tindakan lainnya
-            console.log('Pengguna memilih Order');
-          } else if (result.dismiss === Swal.DismissReason.cancel) {
-            // Arahkan pengguna ke halaman Back atau lakukan tindakan lainnya
-            console.log('Pengguna memilih Back');
-          }
-        });
-      } else {
-        // Tampilkan SweetAlert dengan pesan kesalahan
-        Swal.fire({
-          title: 'Oops...',
-          text: response.data.messages?.error || 'Terjadi kesalahan saat melakukan pembayaran',
-          icon: 'error',
-        });
+        navigate('/payment'); // Navigate to /payment after successful order
       }
     } catch (error) {
-      // Tampilkan SweetAlert dengan pesan kesalahan
-      Swal.fire({
-        title: 'Oops...',
-        text: 'Terjadi kesalahan saat melakukan pembayaran',
-        icon: 'error',
-      });
+      console.error('Error:', error);
     }
   };
 
@@ -161,35 +130,9 @@ const Checkout = () => {
                     onChange={(e) => setEnterAddress(e.target.value)}
                   />
                 </div>
-                <div className="form__group">
-                  <label>Payment Method:</label>
-                  <div className="payment-method">
-                    <label>
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="cash"
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                        checked={paymentMethod === 'cash'}
-                      />
-                      Cash
-                    </label>
-
-                    <label>
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="online"
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                        checked={paymentMethod === 'online'}
-                      />
-                      Online Payment
-                    </label>
-                  </div>
-                </div>
 
                 <button type="submit" className="addTOCart__btn">
-                  Payment
+                  Lanjut Ke Pembayaran
                 </button>
               </form>
               

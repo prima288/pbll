@@ -117,7 +117,9 @@ const [editGambarArtikel, setEditGambarArtikel] = useState("");
     const formData = new FormData();
     formData.append("judul_artikel", editJudulArtikel);
     formData.append("deskripsi_artikel", editDeskripsiArtikel);
-    formData.append("gambar_artikel", editGambarArtikel);
+    if (editGambarArtikel) {
+      formData.append("gambar_artikel", editGambarArtikel);
+    }
   
     try {
       const response = await axios.put(`http://localhost:8080/update/artikel/${id}`, formData, {
@@ -125,21 +127,22 @@ const [editGambarArtikel, setEditGambarArtikel] = useState("");
           'Content-Type': 'multipart/form-data',
         },
       });
-    
+  
       console.log('Response:', response.data);
-    
-      if (response.data.status === 200) {
-        alert(response.data.messages.success);
-        getDataArtikel();
-        closeModal();
+  
+      if (response.status === 200) {
+        alert(response.data.messages); // Menggunakan response.data.messages karena respons sukses hanya memiliki pesan saja tanpa properti error
+        getDataArtikel(); // Perbarui data setelah berhasil memperbarui
+        closeModal(); // Tutup modal setelah berhasil memperbarui
       } else {
-        alert("Data Gagal Diupdate: " + response.data.messages.error);
+        alert("Data Gagal Diupdate: " + response.data.error); // Menggunakan response.data.error untuk menampilkan pesan kesalahan jika ada
       }
     } catch (error) {
       console.error("Error updating data:", error);
       alert("Data Gagal Diupdate. Lihat konsol untuk detail.");
     }
-  };
+};
+
   
 
   const showModalDelete = (data) => {
@@ -190,33 +193,34 @@ const [editGambarArtikel, setEditGambarArtikel] = useState("");
               </CTableRow>
             </CTableHead>
             <CTableBody>
-              {dataArtikel.map((item, index) => (
-                <CTableRow key={index}>
-                <CTableDataCell>{item.judul_artikel}</CTableDataCell>
-                <CTableDataCell>{item.deskripsi_artikel}</CTableDataCell>
-                <CTableDataCell>
-                    <img
-                      src={`http://localhost:8080/gambar/${item.gambar_artikel}`}
-                      alt={item.gambar_artikel || "Gambar Artikel"}
-                      style={{ maxWidth: '1000px', maxHeight: '1000px' }}
-                    />
-                    </CTableDataCell>
-                  <CTableDataCell>
-                     <CButton
-                      className='btn btn-primary text-white me-2'
-                      onClick={() => showModal(item)}
-                    >
-                      Edit
-                    </CButton> 
-                    <CButton
-                      className='btn btn-danger text-white'
-                      onClick={() => showModalDelete(item)}
-                    >
-                      Hapus
-                    </CButton>
-                  </CTableDataCell>
-                </CTableRow>
-              ))}
+            {dataArtikel.map((item, index) => (
+  <CTableRow key={index}>
+    <CTableDataCell>{item.judul_artikel ?? '-'}</CTableDataCell>
+    <CTableDataCell>{item.deskripsi_artikel ?? '-'}</CTableDataCell>
+    <CTableDataCell>
+      <img
+        src={`http://localhost:8080/gambar/${item.gambar_artikel}`}
+        alt={item.gambar_artikel || "Gambar Artikel"}
+        style={{ maxWidth: '1000px', maxHeight: '1000px' }}
+      />
+    </CTableDataCell>
+    <CTableDataCell>
+      <CButton
+        className='btn btn-primary text-white me-2'
+        onClick={() => showModal(item)}
+      >
+        Edit
+      </CButton> 
+      <CButton
+        className='btn btn-danger text-white'
+        onClick={() => showModalDelete(item)}
+      >
+        Hapus
+      </CButton>
+    </CTableDataCell>
+  </CTableRow>
+))}
+
               <CTableRow>
                 <CTableDataCell colSpan="5" className="text-center">
                  
