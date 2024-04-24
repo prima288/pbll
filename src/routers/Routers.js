@@ -9,6 +9,7 @@ import ProductDetails from '../pages/user/ProductDetails';
 import Checkout from '../pages/user/Checkout';
 import Login from '../pages/user/Login';
 import Signup from '../pages/user/Signup';
+import Payment from '../pages/user/payment';
 import ArtikelDetails from '../pages/user/ArtikelDetails';
 import Payment from '../pages/user/payment';
 
@@ -56,6 +57,7 @@ const Routers = () => {
             <Route path='/shop' element={<Shop/>}/>
             <Route path='/shop/:id' element={<ProductDetails/>}/>
             <Route path='/cart' element={<Cart/>}/>
+            <Route path='/payment' element={<Payment/>}/>
             <Route path='/checkout' element={<Checkout/>}/>
             <Route path='/detail/:id' element={<ProductDetails/>}/>
             <Route path='/detailartikel/:id' element={<ArtikelDetails/>} />

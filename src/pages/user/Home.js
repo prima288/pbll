@@ -17,7 +17,7 @@ import ArtikelList from "../../components/UI/ArtikelList";
 
 const Home = ( ) => {
 
-    const year = new Date().getFullYear();
+
     return (
     <Helmet title={"Home"}>
         <section className="hero__section">
@@ -25,7 +25,7 @@ const Home = ( ) => {
                 <Row>
                     <Col lg='6' md='6'>
                         <div className="hero__content">
-                            <p className="hero__subtitle">Trending Product in {year}</p>
+                            <p className="hero__subtitle">Trending Product in</p>
                             <h2>Beras Sehat Pilihan Kita</h2>
                             <p>Beras sehat adalah jenis beras yang telah melalui proses pengolahan
                             yang minimal atau tanpa menggunakan bahan kimia sintetis seperti pestisida atau pupuk buatan,
@@ -48,7 +48,7 @@ const Home = ( ) => {
         </section>
 
         <Services />
-        <section className="trending__products">
+            <section>
             <Container>
                 <Row>
                     <Col lg='12' className="text-center">
