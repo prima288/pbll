@@ -120,7 +120,7 @@ const [editGambarArtikel, setEditGambarArtikel] = useState("");
     if (editGambarArtikel) {
       formData.append("gambar_artikel", editGambarArtikel);
     }
-  
+    
     try {
       const response = await axios.put(`http://localhost:8080/update/artikel/${id}`, formData, {
         headers: {
@@ -130,19 +130,19 @@ const [editGambarArtikel, setEditGambarArtikel] = useState("");
   
       console.log('Response:', response.data);
   
-      if (response.status === 200) {
-        alert(response.data.messages); // Menggunakan response.data.messages karena respons sukses hanya memiliki pesan saja tanpa properti error
+      if (response.data.status === 200) { // Ubah pengecekan menjadi response.data.status
+        alert(response.data.messages.success);
         getDataArtikel(); // Perbarui data setelah berhasil memperbarui
         closeModal(); // Tutup modal setelah berhasil memperbarui
       } else {
-        alert("Data Gagal Diupdate: " + response.data.error); // Menggunakan response.data.error untuk menampilkan pesan kesalahan jika ada
+        alert("Data Gagal Diupdate: " + response.data.messages.error); // Ubah pesan error menjadi response.data.messages.error
       }
     } catch (error) {
       console.error("Error updating data:", error);
       alert("Data Gagal Diupdate. Lihat konsol untuk detail.");
     }
-};
-
+  };
+  
   
 
   const showModalDelete = (data) => {

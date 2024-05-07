@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Container, Row, Col, Button } from "reactstrap";
-import { Link } from "react-router-dom";
-import { cartActions } from "../../shop/shop-cart/cartSlice";
-=======
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row, Col, Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { cartActions } from '../../shop/shop-cart/cartSlice';
->>>>>>> fabd4a95c54ee6571a7b012ef06f4ce9915273b9
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -37,47 +29,30 @@ const Cart = () => {
         <>
           {cartItems.map((item) => (
             <Row key={item.id} className="mb-3">
-              <Col sm="2">
+              <Col xs="12" md="2">
                 <img src={item.image} alt={item.title} className="img-fluid" />
               </Col>
-              <Col sm="3">
+              <Col xs="12" md="3">
                 <p>{item.title}</p>
               </Col>
-              <Col sm="2">
-<<<<<<< HEAD
-                <p>Harga: Rp.{parseFloat(item.price).toFixed(2)}</p>
+              <Col xs="6" md="2">
+                <p>Harga: Rp.{(item.price * item.quantity).toFixed(2)}</p>
               </Col>
-
-              <Col sm="2">
-                <Button color="info" onClick={() => handleDecrement(item.id)}>-
-                </Button>{" "}
-                
-                <span>{item.quantity}</span>{" "}
-                
-                <Button color="info" onClick={() => handleIncrement(item.id)}>+
-                </Button>{" "}
-              </Col>
-
-              <Col sm="3">
-                <Button color="danger" onClick={() => handleRemove(item.id)}>
-                  Remove
-                </Button>
-=======
-                <p>Harga: Rp.{item.price}</p>
-              </Col>
-              <Col sm="2">
+              <Col xs="6" md="2">
                 <Button color="info" onClick={() => handleDecrement(item.id)}>-</Button>{' '}
                 <span>{item.quantity}</span>{' '}
                 <Button color="info" onClick={() => handleIncrement(item.id)}>+</Button>{' '}
               </Col>
-              <Col sm="3">
+              <Col xs="12" md="3">
                 <Button color="danger" onClick={() => handleRemove(item.id)}>Remove</Button>
->>>>>>> fabd4a95c54ee6571a7b012ef06f4ce9915273b9
               </Col>
             </Row>
           ))}
           <Row>
-            <Col sm="12">
+            <Col xs="12">
+              <p>Total: Rp.{cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}</p>
+            </Col>
+            <Col xs="12">
               <Link to="/checkout">
                 <Button color="primary">Checkout</Button>
               </Link>
